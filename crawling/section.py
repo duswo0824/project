@@ -34,7 +34,7 @@ async def crawl_sections():
     logger.info("조선일보 섹션별 RSS 10개씩 크롤링 시작")
 
     titles, links, pub_dates = [], [], []
-    sections = []
+    categories = []
     creators, descs, contents = [], [], []
     images, comments_list, guids = [], [], []
 
@@ -77,7 +77,7 @@ async def crawl_sections():
                 titles.append(title)
                 links.append(link)
                 pub_dates.append(pub_date)
-                sections.append(section_name)  # 중요: 섹션 기록
+                categories.append(section_name)  # 중요: 섹션 기록
                 creators.append(creator)
                 descs.append(description)
                 contents.append(content_html)
@@ -90,7 +90,7 @@ async def crawl_sections():
         "title": titles,
         "link": links,
         "pub_date": pub_dates,
-        "section": sections,
+        "category": categories,
         "creator": creators,
         "description": descs,
         "content_html": contents,
