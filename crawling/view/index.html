@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>조선일보 RSS 크롤링</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        
+
+    </style>
+</head>
+<body>
+    <h3>조선일보 RSS 자동 크롤링</h3>
+    <hr/>
+    <button onclick="crawl()">RSS 크롤링 실행</button>
+    <div id="result"></div>
+</body>
+<script>
+    function crawl(){
+        $.ajax({
+            url:'/crawl',
+            type:'GET',
+            data:{},
+            dataType:'JSON',
+            success:function(data){
+                // JSON으로 받은 data.count(저장된 개수)를 <div id="result"></div> 안에 글자로 채워 넣음
+                // HTML 안에서 id="result" 요소 찾음.div 안에 글자를 넣는 것
+                document.getElementById("result").innerText = "크롤링 완료! 저장된 개수: " + data.count;
+            },
+            error:function(err){
+                console.log(err);
+                alert("크롤링 실패");
+            }
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,13 @@
+# 필요한 라이브러리 기록
+# pip install -r requirements.txt
+uvicorn
+fastapi
+beautifulsoup4
+httpx
+starlette
+pandas
+pymysql
+sqlalchemy
+python-multipart
+# xml 파싱용 모듈(lxml)설치
+lxml
