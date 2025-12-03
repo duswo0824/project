@@ -36,7 +36,7 @@ async def crawl_sections():
     titles, links, pub_dates = [], [], []
     categories = []
     creators, descs, contents = [], [], []
-    clean_texts = []  # ← 본문 텍스트만 저장
+    # clean_texts = []  # ← 본문 텍스트만 저장
     images, comments_list, guids = [], [], []
 
     async with httpx.AsyncClient() as client:
@@ -69,7 +69,7 @@ async def crawl_sections():
                 content_html = encoded.text if encoded else ""
 
                 # HTML 제거 → 순수 텍스트로 변환
-                clean_texts = BeautifulSoup(content_html, "html.parser").get_text(strip=True)
+                # clean_texts = BeautifulSoup(content_html, "html.parser").get_text(strip=True)
 
                 media = item.find("media:content")
                 image = media["url"] if media and media.has_attr("url") else ""
@@ -98,7 +98,7 @@ async def crawl_sections():
         "creator": creators,
         "description": descs,
         "content_html": contents,
-        "text": clean_texts,
+        # "text": clean_texts,
         "image": images,
         "comments": comments_list,
         "guid": guids
