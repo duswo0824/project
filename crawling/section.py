@@ -36,7 +36,7 @@ async def crawl_sections():
     titles, links, pub_dates = [], [], []
     categories = []
     creators, descs, contents = [], [], []
-    # clean_texts = []  # ← 본문 텍스트만 저장
+    contents_p = []  # ← 본문 텍스트만 저장 <p> 태그
     images, comments_list, guids = [], [], []
 
     async with httpx.AsyncClient() as client:
@@ -68,8 +68,10 @@ async def crawl_sections():
                 encoded = item.find("content:encoded")
                 content_html = encoded.text if encoded else ""
 
-                # HTML 제거 → 순수 텍스트로 변환
-                # clean_texts = BeautifulSoup(content_html, "html.parser").get_text(strip=True)
+                # 첫 번째 <p> 태그만 추출
+                soup2 = BeautifulSoup(content_html, "html.parser")
+                first_p = soup2.find("p")
+                content_p = first_p.get_text(strip=True) if first_p else ""
 
                 media = item.find("media:content")
                 image = media["url"] if media and media.has_attr("url") else ""
@@ -85,6 +87,7 @@ async def crawl_sections():
                 creators.append(creator)
                 descs.append(description)
                 contents.append(content_html)
+                contents_p.append(content_p) # p태그 본문 한줄?
                 images.append(image)
                 comments_list.append(comment)
                 guids.append(guid)
@@ -97,8 +100,8 @@ async def crawl_sections():
         "category": categories,
         "creator": creators,
         "description": descs,
-        "content_html": contents,
-        # "text": clean_texts,
+        "content_html": contents,  # 전체 HTML
+        "contents_p":contents_p, # 첫 번째 p 태그 텍스트
         "image": images,
         "comments": comments_list,
         "guid": guids
