@@ -1,4 +1,4 @@
-# crawal.py   ← 기존 crawl_rss 기능을 옮긴 파일
+# crawl.py
 
 import httpx
 from bs4 import BeautifulSoup
@@ -20,7 +20,7 @@ headers = {
 
 # main에서 호출될 함수 (FastAPI가 실행)
 async def crawl_rss():
-    logger.info("조선일보 메인 RSS 30개 크롤링 시작")
+    logger.info("조선일보 메인 RSS 50개 크롤링 시작")
 
     async with httpx.AsyncClient() as client:
         resp = await client.get(url, headers=headers)
@@ -34,6 +34,7 @@ async def crawl_rss():
     titles, links, pub_dates = [], [], []
     categories, creators, descs = [], [], []
     contents, images, comments, guids = [], [], [], []
+    contents_p = [] # ← 본문 텍스트만 저장 <p> 태그
 
     info_list = []
 
@@ -51,6 +52,11 @@ async def crawl_rss():
         encoded = item.find("content:encoded")
         content_html = encoded.text if encoded else ""
 
+        # 첫 번째 <p> 태그만 추출
+        soup2 = BeautifulSoup(content_html, "html.parser")
+        first_p = soup2.find("p")
+        content_p = first_p.get_text(strip=True) if first_p else ""
+
         media = item.find("media:content")
         image = media["url"] if media and media.has_attr("url") else ""
 
@@ -65,6 +71,7 @@ async def crawl_rss():
         creators.append(creator)
         descs.append(description)
         contents.append(content_html)
+        contents_p.append(content_p)  # p태그 본문 한줄
         images.append(image)
         comments.append(comment)
         guids.append(guid)
@@ -84,6 +91,7 @@ async def crawl_rss():
         "creator": creators,
         "description": descs,
         "content_html": contents,
+        "contents_p": contents_p,  # 첫 번째 p 태그 텍스트
         "image": images,
         "comments": comments,
         "guid": guids
